@@ -1,0 +1,31 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux8Way16.hdl
+
+/**
+ * 8-way 16-bit multiplexor:
+ * out = a if sel == 000
+ *       b if sel == 001
+ *       etc.
+ *       h if sel == 111
+ */
+
+// c if 010, d if 011, e if 100, f if 101,g if 110, h if 111
+
+CHIP Mux8Way16 {
+    IN a[16], b[16], c[16], d[16],
+       e[16], f[16], g[16], h[16],
+       sel[3];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+    Mux16(a=false,b=true,sel=sel[2],out=dup2);
+    Not16(in=dup2,out=ndup2);
+    Mux4Way16(a=a,b=b,c=c,d=d,sel=sel[0..1],out=tmp0);
+    And16(a=tmp0,b=ndup2,out=tmp1);
+    Mux4Way16(a=e,b=f,c=g,d=h,sel=sel[0..1],out=tmp2);
+    And16(a=tmp2,b=dup2,out=tmp3);
+    Or16(a=tmp1,b=tmp3,out=out);
+}
